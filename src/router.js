@@ -11,19 +11,46 @@ const router = new Router({
 			},
 			component: (resolve) =>
 				require([
-					'./views/cardParkContract/cardParkContractPre.vue',
+					'./views/carParkContract/carParkContractPre.vue',
 				], resolve),
 		},
 		{
-			path: '/cardParkContractEdit',
-			name: 'cardParkContractEdit',
+			path: '/carParkContractEdit',
+			name: 'carParkContractEdit',
 			meta: {
 				title: 'ETC停车',
 			},
 			component: (resolve) =>
 				require([
-					'./views/cardParkContract/cardParkContractEdit.vue',
+					'./views/carParkContract/carParkContractEdit.vue',
 				], resolve),
+		},
+		{
+			path: '/carSignInfo',
+			name: 'carSignInfo',
+			meta: {
+				title: 'ETC停车',
+			},
+			component: (resolve) =>
+				require(['./views/carSignInfo.vue'], resolve),
+		},
+		{
+			path: '/carSignResult',
+			name: 'carSignResult',
+			meta: {
+				title: 'ETC停车',
+			},
+			component: (resolve) =>
+				require(['./views/carParkContract/carSignResult.vue'], resolve),
+		},
+		{
+			path: '/signInfoHistory',
+			name: 'signInfoHistory',
+			meta: {
+				title: '签约记录',
+			},
+			component: (resolve) =>
+				require(['./views/signInfoHistory.vue'], resolve),
 		},
 	],
 });
