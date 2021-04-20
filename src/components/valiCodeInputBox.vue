@@ -19,7 +19,7 @@
           valiTimeNum ? `${valiTimeNum}秒后可重新获取` : "重新获取"
         }}</van-button
       >
-      <div class="vali_content" @click="InputValiCodeHandler">
+      <div class="vali_content">
         <input
           type="text"
           ref="input"
@@ -36,6 +36,8 @@
           class="inputItem"
           v-for="(item, index) in valiCodeArr"
           :key="index"
+          :index="index"
+          @click="setInputIndex"
         >
           {{ item }}
         </div>
@@ -84,9 +86,12 @@ export default {
     },
   },
   methods: {
-    InputValiCodeHandler() {
-      console.log('@click="InputValiCodeHandler"', this.$refs.input);
+    setInputIndex(e) {
+      let index = e.target.attributes.index.value;
+      index++;
       this.$refs.input.focus();
+      this.$refs.input.selectionStart = index;
+      this.$refs.input.selectionEnd = index;
     },
     retryGetValiCode() {
       if (!this.valiTimeNum) {

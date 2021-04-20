@@ -57,7 +57,9 @@ export default {
     ValiCodeInputBox,
   },
   data() {
-    return {};
+    return {
+      Vehicle: {},
+    };
   },
   methods: {
     toSignHistory(event) {

@@ -12,17 +12,39 @@
     />
     <div class="content">
       <LicensePlateSignItem
+        title="已签约"
+        type="isEdit_signed"
         :data="licensePlateData"
-        :isEdit="false"
+        :disabled="!isEdit_signed && isEdit_notSign"
+        :isEdit="isEdit_signed"
+        @editHandler="editHandler"
+        :style="{ marginTop: '8px' }"
+      >
+      </LicensePlateSignItem>
+      <LicensePlateSignItem
+        title="未签约"
+        type="isEdit_notSign"
+        :data="licensePlateNotSignData"
+        :disabled="!isEdit_notSign && isEdit_signed"
+        :isEdit="isEdit_notSign"
+        @editHandler="editHandler"
         :style="{ marginTop: '8px' }"
       >
       </LicensePlateSignItem>
     </div>
-    <div class="footer">
-      <van-button block type="primary" @click="SignWitETC"
+    <div class="footer" v-show="isEdit_signed || isEdit_notSign">
+      <van-button class="FButton" color="" block hairline @click="cancelEdit"
+        >取消</van-button
+      >
+      <van-button
+        v-if="isEdit_signed"
+        class="FButton"
+        block
+        type="primary"
+        @click="SignWitETC"
         >签约ETC停车</van-button
       >
-      <van-button block hairline :style="{ marginTop: '10px' }"
+      <van-button v-else class="FButton" color="#F0422C" block hairline
         >解除签约</van-button
       >
     </div>
@@ -41,7 +63,7 @@
           plain
           hairline
           @click="retryGetValiCode"
-          :style="{ width: '80%', margin: '8px auto', marginTop: '8px' }"
+          :style="{ width: '80%', margin: '16px auto', marginTop: '16px' }"
           >{{
             valiTimeNum ? `${valiTimeNum}秒后可重新获取` : "重新获取"
           }}</van-button
@@ -73,7 +95,16 @@
 </template>
 <script>
 // import NoticeBar from '../../components/NoticeBar';
-import { NoticeBar, NavBar, Icon, Button, Dialog } from "vant";
+import {
+  NoticeBar,
+  NavBar,
+  Icon,
+  Button,
+  Dialog,
+  Cell,
+  CellGroup,
+  Checkbox,
+} from "vant";
 import LicensePlateSignItem from "../../components/LicensePlateSignItem";
 import topHeader from "../../components/topHeader";
 export default {
@@ -86,30 +117,55 @@ export default {
     [Icon.name]: Icon,
     [Button.name]: Button,
     [Dialog.name]: Dialog,
+    [Cell.name]: Cell,
+    [CellGroup.name]: CellGroup,
+    [Checkbox.name]: Checkbox,
   },
   data() {
     return {
       showValiDialog: false,
       licensePlateData: [
         {
+          id: 1,
           number: "粤A12345",
           phone: "18620162705",
           status: 1,
-          statusValue: "已签约",
         },
         {
+          id: 2,
           number: "粤A12346",
           phone: "18620162705",
           status: 0,
-          statusValue: "未签约",
         },
         {
+          id: 3,
           number: "粤A12347",
           phone: "18620162705",
           status: 1,
-          statusValue: "已签约",
         },
       ],
+      licensePlateNotSignData: [
+        {
+          id: 1,
+          number: "粤A22345",
+          phone: "18620162705",
+          status: 0,
+        },
+        {
+          id: 2,
+          number: "粤A32346",
+          phone: "18620162705",
+          status: 0,
+        },
+        {
+          id: 3,
+          number: "粤A52347",
+          phone: "18620162705",
+          status: 0,
+        },
+      ],
+      isEdit_signed: false,
+      isEdit_notSign: false,
       valiCode: "",
       valiTimeNum: 60,
     };
@@ -144,8 +200,10 @@ export default {
     SignWitETC() {
       let phone = this.$options.filters["filterPhoneNumbe"]("13820163455");
       Dialog.confirm({
-        title: "标题",
+        title: "签约验证",
         message: `更改签约状态需通过身份验证，是否向手机号${phone}发送验证码`,
+        confirmButtonColor: "#0D9F4B",
+        cancelButtonText: "退出",
       })
         .then(() => {
           this.showValiDialog = true;
@@ -156,6 +214,14 @@ export default {
       console.log('@click="InputValiCodeHandler"', this.$refs.input);
       this.$refs.input.focus();
     },
+    editHandler({ type: name }) {
+      this[name] = true; //设置对应的编辑类型为true
+      console.log("t", name, this.isEdit_signed, this.isEdit_notSign);
+    },
+    cancelEdit() {
+      this.isEdit_signed = false;
+      this.isEdit_notSign = false;
+    },
     retryGetValiCode() {
       if (!this.valiTimeNum) {
         // 重新请求验证码
@@ -165,6 +231,7 @@ export default {
 };
 </script>
 <style lang="stylus" type="text/stylus" scoped>
+@import '../../common/stylus/mixin.styl'
 .contract-page
   width 100%
   min-height 100vh
@@ -176,21 +243,51 @@ export default {
   width 100%
   flex 1 1 0%
 .footer
-  width 94%
-  margin 10px auto
+  width 100%
+  display flex
+  justify-content space-around
+  align-items center
+  padding 10px 0
+  padding-bottom 40px
+  background #fff
+.FButton
+  flex-basis 40%
 .dialog_content
   width 90%
   margin 0 auto
-  padding 14px 0
+  padding 24px 0
   text-align center
 .vali_content
   display flex
   justify-content space-around
   align-items center
 .inputItem
-  width 36px
-  height 36px
-  line-height 36px
+  width 40px
+  height 40px
+  color #3F3F3F
+  font-size 22px
+  font-weight 600
+  font-family PingFangSC-Semibold, PingFang SC
+  line-height 40px
   text-align center
-  border 1px solid #333
+  border 1px solid #ADADB3
+.title_item
+  display flex
+  justify-content flex-start
+  align-items center
+.right_item
+  height 32px
+  display flex
+  align-items center
+.item_checked_activing
+  display inline-block
+  width 28px
+  height 32px
+  margin 0 6px
+  bg-image('../../assets/images/cpark_icon_list_status0')
+  background-size 100%
+  background-repeat no-repeat
+.item_icon_text
+  font-size 16px
+  line-height 1rem
 </style>
