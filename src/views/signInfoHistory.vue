@@ -7,7 +7,7 @@
     </TopHeader>
     <div class="content">
       <div class="vehicleInfo">
-        <div>{{ vehicle.number }}</div>
+        <div class="vehicleLicensePlateNum">{{ vehicle.number }}</div>
         <div class="">
           <span>当前状态：</span>
           <span :class="[`vehicle_status_` + vehicle.status]">{{
@@ -18,9 +18,10 @@
       <div class="signList">
         <van-cell-group>
           <van-cell
+            :title-style="{ color: '#656479' }"
             :value-class="['vehicle_status_' + item.status]"
             :title="item.time"
-            :value="item.status ? '已签约' : '未签约'"
+            :value="item.status ? '签约成功' : '取消签约'"
             v-for="item in signData"
             :key="item.time"
           ></van-cell>
@@ -69,6 +70,9 @@ export default {
 .signInfo_page
   width 100vw
   height 100vh
+  color #656479
+.vehicleLicensePlateNum
+  font-weight 550
 .vehicleInfo
   width 90%
   margin 0 auto
@@ -77,7 +81,9 @@ export default {
   justify-content space-between
   align-items center
 .vehicle_status_0
-  color red
+  color #F5A623
+  font-weight 550
 .vehicle_status_1
-  color green
+  color #20B572
+  font-weight 550
 </style>

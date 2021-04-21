@@ -19,9 +19,9 @@
         class="back_button"
         type="primary"
         color="#07c160"
-        text="返回"
+        text="查看签约状态"
         block
-        @click="() => this.$router.go(-1)"
+        @click="backButtonHandler"
       ></van-button>
     </div>
   </div>
@@ -35,6 +35,14 @@ export default {
     TopHeader,
     [Icon.name]: Icon,
     [Button.name]: Button,
+  },
+  data() {
+    return {};
+  },
+  methods: {
+    backButtonHandler() {
+      this.$router.go(-1);
+    },
   },
 };
 </script>

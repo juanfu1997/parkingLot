@@ -2,17 +2,17 @@
   <div :class="[disabled ? 'sign_disabled' : '']">
     <div class="checkAll">
       <span>{{ title }}</span>
-      <span class="check_right_batch" v-show="!isEdit">
+      <span class="check_right_batch" v-show="!isBatch">
         <span>批量</span>
         <img
           class="batch"
           src="../assets/images/cpark_icon_list_p@2x.png"
           srcset="../assets/images/cpark_icon_list_p@3x.png 3x"
-          @click="batchHandler"
+          @click="showBatchHandler"
         />
       </span>
       <van-checkbox
-        v-show="isEdit"
+        v-show="isBatch"
         v-model="checkArr"
         shape="square"
         label-position="left"
@@ -21,7 +21,11 @@
     </div>
     <div class="toolView">
       <van-cell-group>
-        <van-cell v-for="item in LpData" :key="item.id">
+        <van-cell
+          v-for="(item, index) in LpData"
+          :key="item.id"
+          @click="cellClickHandler({ id: item.id, index })"
+        >
           <template #title>
             <div class="title_item">
               <img
@@ -30,18 +34,20 @@
                 srcset="../assets/images/cpark_icon_list_status1@3x.png 3x"
               />
               <span class="item_icon_text">{{ item.number }}</span>
+              <span>({{ item.phone | filterPhoneNumbe }})</span>
             </div>
           </template>
           <template #right-icon>
             <div class="right_item">
               <van-checkbox
-                v-show="isEdit"
-                v-model="item.checked"
+                v-show="isBatch"
+                :value="item.checked"
+                @click="checkboxHandler(index)"
                 shape="square"
                 checked-color="#4FC590"
               ></van-checkbox>
               <van-icon
-                v-show="!isEdit"
+                v-show="!isBatch"
                 name="arrow"
                 size="18"
                 color="#C5C5C7"
@@ -74,41 +80,85 @@ export default {
     return {
       checkArr: false,
       checkedArr: false,
+      edit: false,
+      origin: JSON.parse(JSON.stringify(this.data)),
     };
   },
   computed: {
-    LpData() {
-      // let _data = JSON.parse(JSON.stringify(this.data));
-      let signData = this.data.map((item) => {
-        // item.checked2 = false;
-        return item;
-      });
-      console.log(signData);
-      return signData;
+    isBatch: {
+      get() {
+        return this.edit;
+      },
+      set(value) {
+        this.edit = value;
+      },
+    },
+    LpData: {
+      get() {
+        let _data = [];
+        this.origin.map((item) => {
+          _data.push({
+            checked: false,
+            ...item,
+          });
+        });
+
+        return _data;
+      },
+      set(value) {
+        this.origin = value;
+      },
     },
   },
   watch: {
     disabled(newValue) {
       if (newValue) {
         //禁止编辑
-        this.isEdit = false;
+        this.isBatch = false;
       }
     },
-    // isEdit() {},
+    isEdit(newValue) {
+      this.edit = newValue;
+    },
+    checkArr(newValue) {
+      this.setCheckValue(newValue);
+    },
   },
   methods: {
-    checkAll(e) {
-      let checkObj = document.querySelectorAll(".checkItem");
-      for (var i = 0; i < checkObj.length; i++) {
-        checkObj[i].checked = e.target.checked;
-      }
-      console.log("checkAll", this.checkedArr);
+    setCheckValue(value) {
+      this.origin = this.LpData.map((item) => {
+        item.checked = value;
+        return item;
+      });
     },
-    batchHandler(e) {
+    showBatchHandler() {
       if (this.disabled) return;
-      this.isEdit = !this.isEdit;
-      console.log("t2", e);
+      this.isBatch = !this.isBatch;
+
       this.$emit("editHandler", { type: this.type });
+    },
+    checkboxHandler(index) {
+      let _data = this.LpData;
+      _data[index].checked = !_data[index].checked;
+      this.LpData = _data;
+    },
+    cellClickHandler(data) {
+      let { id } = data;
+      if (this.isBatch) return;
+      this.$router.push({
+        name: "carSignInfo",
+        query: { id },
+      });
+    },
+    getIdsFromChecked() {
+      // 返回已选的ids
+      let ids = [];
+      ids = this.LpData.map((item) => {
+        if (item.checked) {
+          return item.id;
+        }
+      });
+      return ids.join();
     },
   },
 };

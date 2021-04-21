@@ -4,6 +4,7 @@
     title="输入验证码"
     :show-confirm-button="false"
     :close-on-click-overlay="true"
+    @close="closeHandler"
   >
     <div class="dialog_content">
       <div>短信验证码已发送至138****3455</div>
@@ -20,10 +21,11 @@
         }}</van-button
       >
       <div class="vali_content">
-        <input
+        <!-- <input
           type="text"
           ref="input"
-          v-model="valiCode"
+          :value="valiCode"
+          @input="valiCodeInputHandler"
           maxlength="6"
           :style="{
             width: '0px',
@@ -31,6 +33,16 @@
             border: 'none',
             padding: '0',
           }"
+        /> -->
+        <van-number-keyboard
+          theme="custom"
+          v-model="valiCode"
+          maxlength="6"
+          close-button-text="完成"
+          :show="showValiDialog"
+          get-container="body"
+          z-index="12008"
+          @close="keyboardCloseHandler"
         />
         <div
           class="inputItem"
@@ -46,15 +58,22 @@
   </van-dialog>
 </template>
 <script>
-import { Button } from "vant";
+import { Button, NumberKeyboard } from "vant";
 export default {
   name: "valiCodeInputBox",
   components: {
     [Button.name]: Button,
+    [NumberKeyboard.name]: NumberKeyboard,
+  },
+  props: {
+    isShow: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
-      showValiDialog: true,
+      showValiDialog: false,
       valiCode: "",
       valiTimeNum: 60,
     };
@@ -62,10 +81,12 @@ export default {
   computed: {
     valiCodeArr: function () {
       let arr = new Array(6);
-      this.valiCode.split("").map((item, index) => {
-        arr[index] = item;
-      });
-      console.log("arr", arr);
+      String(this.valiCode)
+        .split("")
+        .map((item, index) => {
+          arr[index] = item;
+        });
+
       return arr;
     },
   },
@@ -73,12 +94,13 @@ export default {
     valiCode: function (newValue) {
       if (newValue.length == 6) {
         //自动验证验证码
+        this.$emit("_checkValiCode", { value: newValue });
       }
     },
     showValiDialog: function (newValue) {
       if (newValue) {
         this.$nextTick(() => {
-          this.$refs.input.focus();
+          //   this.$refs.input.focus();
         });
       } else {
         this.valiCode = "";
@@ -86,18 +108,34 @@ export default {
     },
   },
   methods: {
-    setInputIndex(e) {
-      let index = e.target.attributes.index.value;
-      index++;
-      this.$refs.input.focus();
-      this.$refs.input.selectionStart = index;
-      this.$refs.input.selectionEnd = index;
+    setInputIndex() {
+      //   let index = e.target.attributes.index.value;
+      //   index++;
+      //   this.$refs.input.focus();
+      //   this.$refs.input.selectionStart = index;
+      //   this.$refs.input.selectionEnd = index;
     },
     retryGetValiCode() {
       if (!this.valiTimeNum) {
         // 重新请求验证码
         this.valiCode = ""; //清空验证码
       }
+    },
+    closeHandler() {
+      this.showValiDialog = false;
+    },
+    setDialogShow(value) {
+      //设置弹窗显示
+      this.showValiDialog = value;
+    },
+    valiCodeInputHandler(e) {
+      this.valiCode = e.target.value.replace(/[^\d]/g, "").trim();
+      console.log(e.target.value, "|", this.valiCode);
+    },
+    keyboardCloseHandler() {
+      console.log("关闭");
+      this.closeHandler();
+      this.$emit("_checkValiCode", { value: this.valiCode });
     },
   },
 };

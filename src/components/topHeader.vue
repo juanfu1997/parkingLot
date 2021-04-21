@@ -32,7 +32,7 @@ export default {
       if (this.$route.query.retry) {
         return;
       }
-      this.$route.go(-1);
+      this.$router.go(-1);
     },
   },
 };

@@ -12,12 +12,13 @@ body
   padding 0
   margin 0
 #app
-  font-family 'Avenir', Helvetica, Arial, sans-serif
+  font-family PingFangSC-Medium, PingFang SC
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
   color #2c3e50
   background #F1F0F6
   min-height 100%
+  font-size 16px
   line-height 1rem
 #nav
   padding 30px

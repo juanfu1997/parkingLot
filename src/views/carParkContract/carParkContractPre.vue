@@ -8,7 +8,7 @@
     <van-notice-bar
       wrapable
       :scrollable="false"
-      text="已签约车辆可在停车场通过ETC支付停车费用（需停车场支持ETC扣费）"
+      text="已签约车辆可在停车场通过ETC卡支付停车费用（需停车场支持ETC扣费）"
     />
     <div class="content">
       <LicensePlateSignItem
@@ -44,10 +44,21 @@
         @click="SignWitETC"
         >签约ETC停车</van-button
       >
-      <van-button v-else class="FButton" color="#F0422C" block hairline
+      <van-button
+        v-else
+        class="FButton"
+        color="#F0422C"
+        block
+        hairline
+        @click="SignWitETC"
         >解除签约</van-button
       >
     </div>
+    <!-- 验证码弹窗 -->
+    <ValiCodeInputBox
+      :isShow="showValiDialog"
+      ref="child_valiInput"
+    ></ValiCodeInputBox>
     <van-dialog
       v-model="showValiDialog"
       title="输入验证码"
@@ -107,11 +118,13 @@ import {
 } from "vant";
 import LicensePlateSignItem from "../../components/LicensePlateSignItem";
 import topHeader from "../../components/topHeader";
+import ValiCodeInputBox from "../../components/valiCodeInputBox";
 export default {
   name: "carParkContractPre",
   components: {
     LicensePlateSignItem,
     TopHeader: topHeader,
+    ValiCodeInputBox,
     [NoticeBar.name]: NoticeBar,
     [NavBar.name]: NavBar,
     [Icon.name]: Icon,
@@ -146,19 +159,19 @@ export default {
       ],
       licensePlateNotSignData: [
         {
-          id: 1,
+          id: 4,
           number: "粤A22345",
           phone: "18620162705",
           status: 0,
         },
         {
-          id: 2,
+          id: 5,
           number: "粤A32346",
           phone: "18620162705",
           status: 0,
         },
         {
-          id: 3,
+          id: 6,
           number: "粤A52347",
           phone: "18620162705",
           status: 0,
@@ -206,9 +219,23 @@ export default {
         cancelButtonText: "退出",
       })
         .then(() => {
-          this.showValiDialog = true;
+          this.$refs.child_valiInput.setDialogShow(true);
         })
         .catch(() => {});
+    },
+    /**
+     * 校验验证码事件
+     */
+    _checkValiCode() {
+      //校验验证码事件
+
+      //请求变更签约状态
+
+      //验证通过跳转签约结果页
+      this.$router.push({
+        name: "carSignResult",
+        query: {},
+      });
     },
     InputValiCodeHandler() {
       console.log('@click="InputValiCodeHandler"', this.$refs.input);
@@ -247,7 +274,7 @@ export default {
   display flex
   justify-content space-around
   align-items center
-  padding 10px 0
+  padding 16px 0
   padding-bottom 40px
   background #fff
 .FButton

@@ -30,6 +30,7 @@ const router = new Router({
 			name: 'carSignInfo',
 			meta: {
 				title: 'ETC停车',
+				keepAlive: true,
 			},
 			component: (resolve) =>
 				require(['./views/carSignInfo.vue'], resolve),
