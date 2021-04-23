@@ -2,7 +2,7 @@
   <div class="navView">
     <van-nav-bar>
       <template #left>
-        <van-icon name="arrow-left" size="22" @click="goBack" />
+        <van-icon name="arrow-left" size="22" color="#888888" @click="goBack" />
       </template>
       <template #title>
         <span class="navTitle">{{ title }}</span>

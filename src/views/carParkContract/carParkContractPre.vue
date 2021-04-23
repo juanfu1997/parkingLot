@@ -1,10 +1,6 @@
 <template>
   <div class="contract-page">
-    <TopHeader title="ETC停车">
-      <template #right>
-        <van-icon name="setting-o" size="22" />
-      </template>
-    </TopHeader>
+    <TopHeader title="ETC停车"> </TopHeader>
     <van-notice-bar
       wrapable
       :scrollable="false"
@@ -58,6 +54,7 @@
     <ValiCodeInputBox
       :isShow="showValiDialog"
       ref="child_valiInput"
+      @_checkValiCode="_checkValiCode"
     ></ValiCodeInputBox>
     <van-dialog
       v-model="showValiDialog"
@@ -137,46 +134,9 @@ export default {
   data() {
     return {
       showValiDialog: false,
-      licensePlateData: [
-        {
-          id: 1,
-          number: "粤A12345",
-          phone: "18620162705",
-          status: 1,
-        },
-        {
-          id: 2,
-          number: "粤A12346",
-          phone: "18620162705",
-          status: 0,
-        },
-        {
-          id: 3,
-          number: "粤A12347",
-          phone: "18620162705",
-          status: 1,
-        },
-      ],
-      licensePlateNotSignData: [
-        {
-          id: 4,
-          number: "粤A22345",
-          phone: "18620162705",
-          status: 0,
-        },
-        {
-          id: 5,
-          number: "粤A32346",
-          phone: "18620162705",
-          status: 0,
-        },
-        {
-          id: 6,
-          number: "粤A52347",
-          phone: "18620162705",
-          status: 0,
-        },
-      ],
+      originData: [], //源数据
+      licensePlateData: [],
+      licensePlateNotSignData: [],
       isEdit_signed: false,
       isEdit_notSign: false,
       valiCode: "",
@@ -194,6 +154,21 @@ export default {
     },
   },
   watch: {
+    originData: {
+      handler(newValue) {
+        console.log("newValue", newValue);
+        if (newValue === undefined || !newValue.length) return;
+        newValue.map((item) => {
+          if (+item.status) {
+            this.licensePlateData.push(Object.assign({}, item));
+          } else {
+            this.licensePlateNotSignData.push(Object.assign({}, item));
+          }
+        });
+        console.log("123", this.licensePlateData, this.licensePlateNotSignData);
+      },
+      deep: true,
+    },
     valiCode: function (newValue) {
       if (newValue.length == 6) {
         //自动验证验证码
@@ -208,6 +183,12 @@ export default {
         this.valiCode = "";
       }
     },
+  },
+  created() {
+    this.$$.queryListCarContract("20201218110418693441").then((res) => {
+      this.originData = res.object;
+      console.log("this", this.originData, res);
+    });
   },
   methods: {
     SignWitETC() {
@@ -232,6 +213,8 @@ export default {
       //请求变更签约状态
 
       //验证通过跳转签约结果页
+      console.log("跳转结果页");
+
       this.$router.push({
         name: "carSignResult",
         query: {},
@@ -258,7 +241,7 @@ export default {
 };
 </script>
 <style lang="stylus" type="text/stylus" scoped>
-@import '../../common/stylus/mixin.styl'
+@import '../../assets/stylus/mixin.styl'
 .contract-page
   width 100%
   min-height 100vh

@@ -15,17 +15,6 @@ const router = new Router({
 				], resolve),
 		},
 		{
-			path: '/carParkContractEdit',
-			name: 'carParkContractEdit',
-			meta: {
-				title: 'ETC停车',
-			},
-			component: (resolve) =>
-				require([
-					'./views/carParkContract/carParkContractEdit.vue',
-				], resolve),
-		},
-		{
 			path: '/carSignInfo',
 			name: 'carSignInfo',
 			meta: {
@@ -33,7 +22,7 @@ const router = new Router({
 				keepAlive: true,
 			},
 			component: (resolve) =>
-				require(['./views/carSignInfo.vue'], resolve),
+				require(['./views/carParkContract/carSignInfo.vue'], resolve),
 		},
 		{
 			path: '/carSignResult',
@@ -51,7 +40,9 @@ const router = new Router({
 				title: '签约记录',
 			},
 			component: (resolve) =>
-				require(['./views/signInfoHistory.vue'], resolve),
+				require([
+					'./views/carParkContract/signInfoHistory.vue',
+				], resolve),
 		},
 	],
 });

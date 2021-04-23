@@ -1,16 +1,23 @@
 {
   "name": "parking_lot",
   "version": "0.1.0",
+  "license": "ISC",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "develop": "vue-cli-service serve --mode develop",
+    "trial": "vue-cli-service serve --mode trial",
+    "release": "vue-cli-service serve --mode release",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "postcss-pxtorem": "4.0.1",
     "vant": "^2.12.13",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "vue-router": "^3.5.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

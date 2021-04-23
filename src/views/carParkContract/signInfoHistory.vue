@@ -1,10 +1,6 @@
 <template>
   <div class="signInfo_page">
-    <TopHeader>
-      <template #right>
-        <van-icon name="setting-o" size="22" />
-      </template>
-    </TopHeader>
+    <TopHeader> </TopHeader>
     <div class="content">
       <div class="vehicleInfo">
         <div class="vehicleLicensePlateNum">{{ vehicle.number }}</div>
@@ -32,7 +28,7 @@
 </template>
 <script>
 import { Cell, CellGroup, Icon } from "vant";
-import TopHeader from "../components/topHeader";
+import TopHeader from "../../components/topHeader";
 export default {
   name: "signInfoHistory",
   components: {

@@ -1,10 +1,6 @@
 <template>
   <div class="sign_page">
-    <TopHeader title="ETC停车">
-      <template #right>
-        <van-icon name="setting-o" size="22" />
-      </template>
-    </TopHeader>
+    <TopHeader title="ETC停车"> </TopHeader>
     <van-notice-bar
       wrapable
       :scrollable="false"
@@ -51,14 +47,15 @@
       <ValiCodeInputBox
         :isShow="showValiDialog"
         ref="child_valiInput"
+        @_checkValiCode="_checkValiCode"
       ></ValiCodeInputBox>
     </div>
   </div>
 </template>
 <script>
 import { NoticeBar, Icon, Cell, CellGroup, Button, Dialog } from "vant";
-import TopHeader from "../components/topHeader";
-import ValiCodeInputBox from "../components/valiCodeInputBox";
+import TopHeader from "../../components/topHeader";
+import ValiCodeInputBox from "../../components/valiCodeInputBox";
 export default {
   name: "carSignInfo",
   components: {
@@ -112,6 +109,7 @@ export default {
       //请求变更签约状态
 
       //验证通过跳转签约结果页
+      console.log("跳转结果页");
       this.$router.push({
         name: "carSignResult",
         query: {},

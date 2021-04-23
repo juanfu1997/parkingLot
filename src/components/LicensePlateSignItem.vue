@@ -33,7 +33,7 @@
                 src="../assets/images/cpark_icon_list_status1@2x.png"
                 srcset="../assets/images/cpark_icon_list_status1@3x.png 3x"
               />
-              <span class="item_icon_text">{{ item.number }}</span>
+              <span class="item_icon_text">{{ item.plateNumber }}</span>
               <span>({{ item.phone | filterPhoneNumbe }})</span>
             </div>
           </template>
@@ -96,13 +96,14 @@ export default {
     LpData: {
       get() {
         let _data = [];
-        this.origin.map((item) => {
+        let originData = JSON.parse(JSON.stringify(this.data));
+        originData.map((item) => {
           _data.push({
             checked: false,
             ...item,
           });
         });
-
+        console.log("LpData", _data);
         return _data;
       },
       set(value) {
@@ -168,6 +169,7 @@ export default {
   opacity 0.6
 .checkAll
   width 90%
+  height 24px
   display flex
   justify-content space-between
   align-items center

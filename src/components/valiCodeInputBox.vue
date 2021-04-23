@@ -42,7 +42,8 @@
           :show="showValiDialog"
           get-container="body"
           z-index="12008"
-          @close="keyboardCloseHandler"
+          @close="closeHandler"
+          @hide="keyboardHideHandler"
         />
         <div
           class="inputItem"
@@ -94,10 +95,12 @@ export default {
     valiCode: function (newValue) {
       if (newValue.length == 6) {
         //自动验证验证码
-        this.$emit("_checkValiCode", { value: newValue });
+        this.closeHandler();
+        this.keyboardHideHandler(newValue);
       }
     },
-    showValiDialog: function (newValue) {
+    showValiDialog: function (newValue, oldValue) {
+      console.log("false了", newValue, oldValue);
       if (newValue) {
         this.$nextTick(() => {
           //   this.$refs.input.focus();
@@ -132,11 +135,13 @@ export default {
       this.valiCode = e.target.value.replace(/[^\d]/g, "").trim();
       console.log(e.target.value, "|", this.valiCode);
     },
-    keyboardCloseHandler() {
-      console.log("关闭");
-      this.closeHandler();
-      this.$emit("_checkValiCode", { value: this.valiCode });
+    keyboardHideHandler(value) {
+      this.$emit("_checkValiCode", { value: value || this.valiCode });
     },
+  },
+  destroyed() {
+    this.closeHandler();
+    console.log("退出页面了");
   },
 };
 </script>
